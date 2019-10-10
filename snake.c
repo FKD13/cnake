@@ -3,7 +3,12 @@
 typedef struct {
   unsigned int x;
   unsigned int y;
-} coord;
+} Coord;
+
+char key_hit(const char *key) {
+  int chr = getch();
+  return (chr != ERR ) && ((char) chr) == *key;
+}
 
 int main() {
   /* init the ncurses screen */
