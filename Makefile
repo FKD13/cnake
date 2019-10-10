@@ -1,5 +1,6 @@
 all:
 	mkdir -p target
-	gcc snake.c -o target/snake
-	./target/snake
+	meson target
+	cd target && ninja
+	cd target ./cnake
 
