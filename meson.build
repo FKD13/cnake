@@ -1,2 +1,3 @@
 project('cnake', 'c')
-executable('cnake', 'snake.c')
+ncurses = dependency('ncurses')
+executable('cnake', 'snake.c', dependencies: ncurses)
