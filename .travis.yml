@@ -1,5 +1,5 @@
 language: c
-install: apt-get install libncurses-dev
+install: sudo apt-get install libncurses-dev
 
 compiler:
         - clang
