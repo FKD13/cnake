@@ -2,7 +2,7 @@ all: build run
 
 build:
 	mkdir -p target
-	cmake -S . -B target
+	cd target && cmake ..
 	cd target && make
 
 run:
