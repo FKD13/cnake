@@ -18,5 +18,4 @@ deploy:
   file: target/cnake
   skip_cleanup: true
   on:
-    tags: true
     repo: FKD13/cnake
