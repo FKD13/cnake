@@ -1,7 +1,8 @@
 all: build run
 
 build:
-	cmake -S . -B target
+	mkdir -p target
+	cd target && cmake ..
 	cd target && make
 
 run:
