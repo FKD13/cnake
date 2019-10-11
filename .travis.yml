@@ -1,5 +1,5 @@
 language: c
-install: make get-deps
+install: apt-get install libncurses-dev
 
 compiler:
         - clang
