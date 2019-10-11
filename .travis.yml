@@ -1,0 +1,11 @@
+language: c
+install: make get-deps
+
+compiler:
+        - clang
+        - gcc
+
+before_install:
+        - pwd
+
+script: make build
