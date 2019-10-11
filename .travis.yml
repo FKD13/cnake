@@ -7,10 +7,16 @@ before_install:
 - pwd
 script: make build
 
+before_deploy:
+  - export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
+  - git tag $TRAVIS_TAG
+
 deploy:
   provider: releases
   api_key:
     secure: LRPa1ArE1CFDocZ5VyeQm9CxnZV69hPZPum5K/kh9roYi8vrOI00QhoqHi2R3iWot0Petgj3ZB0y9TMkzjg9ZD97EIpCP8El9V7qYL8TnVemxc5Ei7upPRhfYM/QakpimAglkkS84qmwRaCHJQYRMKoriQqtQE2ZINX0gyfnm7FyrWE0jvEBB8w/w2AC8sHCj9UByzssVs/k9Iv08b7GM49je2Y/g76FjTpd/cGi9QHjX2zZjKzvy9QvOSXlul6zLjzdQzMxgOiVoh6neZsH5opZUPZ0YJ1rYY6Jw+dFmVEzKhdKAeeCOjApH2z9IJ298pNcmZxzOKWEc4SP27vJ4VJwXplHpf/mTiO7JtNmV2Jeo+D85X2G3LbRbqUGmDrnPghvjrdVvgKvusWK1yyB88rmdglMiibaLE61q8rTIr0zKMvj8ucEz3DFcyKe5pb44/2EfWr9xVuSTxdmRKpLRlFE2wKkKzAxmJZIQI3BcldwYX0hZAAZFtNPjUFLIgmanqPe7XXBnGl1qudriO76dcLVOm0lCnWaIczwwz3krTJ1KUA5VVCuPNkuyNn3EMEUZ6KPGbCRs4nqcLhtOY3bTOhZ2w5SCH3BoD8fWPJHTYOk8ur6bedkGZ1b/6awbymLCk8PRtW4UL/WhMX3gSQ9b7iixehzuZFMxakscx7Gduk=
   file: target/cnake
+  skip_cleanup: true
   on:
+    tags: true
     repo: FKD13/cnake
