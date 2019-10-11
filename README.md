@@ -3,3 +3,4 @@
 ## Requirements
 
 - meson
+- cmake
