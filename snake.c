@@ -32,7 +32,7 @@ void init_snake(Snake *snake) {
     snake->alive = TRUE;
 }
 
-void draw(Snake *snake) {
+void draw(Snake *snake, Coord *apple) {
     clear();
     /* select snake color */
     attron(COLOR_PAIR(1));
@@ -41,6 +41,9 @@ void draw(Snake *snake) {
         Coord *c = snake->body[i];
         mvprintw(c->y,c->x,"@");
     }
+    /* select apple color */
+    attron(COLOR_PAIR(2));
+    mvprintw(apple->y,apple->x, "@");
     refresh();
 }
 
@@ -50,7 +53,7 @@ void add_coord(Coord *coord, Coord *direction) {
 }
 
 /* TODO: check realloc succeeded */
-void move_snake(Snake *snake, Coord *direction) {
+void move_snake(Snake *snake, Coord *apple, Coord *direction) {
     if (snake->full_body_size < snake->body_size + 1) {
         snake->body = realloc(snake->body, snake->full_body_size*2*sizeof(Coord));
         snake->full_body_size *= 2;
@@ -68,6 +71,11 @@ void move_snake(Snake *snake, Coord *direction) {
     current->y = next->y;
     add_coord(current, direction);
     snake->body[0] = current;
+
+    if (current->x == apple->x && current->y == apple->y) {
+        apple->x = rand() % 20;
+        apple->y = rand() % 20;
+    }
 }
 
 int main() {
@@ -82,12 +90,17 @@ int main() {
     /* colors */
     /* snake color */
     init_pair(1, COLOR_RED, COLOR_RED);
+    /* apple color */
+    init_pair(2, COLOR_GREEN, COLOR_GREEN);
+    /* set random seed */
+    srand(42);
     /* main loop */
     time_t last;
     last = time(0);
 
     Snake snake;
     init_snake(&snake);
+    Coord apple = (Coord) {0,0};
     Coord direction = (Coord) {1, 0};
 
     bool running = TRUE;
@@ -111,8 +124,8 @@ int main() {
         /* step when every second */
         if ( difftime(time(0), last) >= 1) {
             last = time(0);
-            move_snake(&snake, &direction);
-            draw(&snake);
+            move_snake(&snake, &apple, &direction);
+            draw(&snake, &apple);
         }
     };
 
