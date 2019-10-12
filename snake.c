@@ -75,6 +75,9 @@ void move_snake(Snake *snake, Coord *apple, Coord *direction) {
     if (current->x == apple->x && current->y == apple->y) {
         apple->x = rand() % 20;
         apple->y = rand() % 20;
+    } else {
+        snake->body[snake->body_size-1] = NULL;
+        snake->body_size--;
     }
 }
 
