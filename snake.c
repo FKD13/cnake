@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <time.h>
+#include <libnet.h>
 
 typedef struct {
     int x;
@@ -21,6 +22,13 @@ char key_hit(const char key) {
     return chr != ERR && ((char) chr) == key;
 }
 
+// Returns a timestamp in microseconds
+uint64_t GetTimeStamp() {
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    return tv.tv_sec * (uint64_t) 1000000 + tv.tv_usec;
+}
+
 /* TODO: check if malloc creation has succeeded */
 void init_snake(Snake *snake) {
     snake->body = (Coord **) malloc(20*sizeof(Coord *));
@@ -32,8 +40,23 @@ void init_snake(Snake *snake) {
     snake->alive = TRUE;
 }
 
-void draw(Snake *snake, Coord *apple) {
+void draw_border(WINDOW* win){
+  int maxY, maxX;
+  getmaxyx(win,maxY,maxX);
+  attron(COLOR_PAIR(3));
+  for(uint i = 0; i < maxX; i++){
+    mvprintw(0, i, "@");
+    mvprintw(maxY-1, i, "@");
+  }
+  for(uint i = 0; i < maxY; i++){
+    mvprintw(i, 0, "@");
+    mvprintw(i, maxX-1, "@");
+  }
+}
+
+void draw(WINDOW* win, Snake *snake, Coord *apple) {
     clear();
+    draw_border(win);
     /* select snake color */
     attron(COLOR_PAIR(1));
     unsigned int i;
@@ -52,8 +75,17 @@ void add_coord(Coord *coord, Coord *direction) {
     coord->y += direction->y;
 }
 
+Coord* rand_coord(WINDOW* win){
+    int maxY, maxX;
+    getmaxyx(win,maxY,maxX);
+    Coord* random_coord = malloc(sizeof(Coord));
+    random_coord->x = (rand() % (maxX-2)) + 1;
+    random_coord->y = (rand() % (maxY-2)) + 1;
+    return random_coord;
+}
+
 /* TODO: check realloc succeeded */
-void move_snake(Snake *snake, Coord *apple, Coord *direction) {
+void move_snake(WINDOW* win, Snake *snake, Coord *apple, Coord *direction) {
     if (snake->full_body_size < snake->body_size + 1) {
         snake->body = realloc(snake->body, snake->full_body_size*2*sizeof(Coord));
         snake->full_body_size *= 2;
@@ -73,17 +105,24 @@ void move_snake(Snake *snake, Coord *apple, Coord *direction) {
     snake->body[0] = current;
 
     if (current->x == apple->x && current->y == apple->y) {
-        apple->x = rand() % 20;
-        apple->y = rand() % 20;
+        // Spawn new apple
+        free(apple);
+        apple = rand_coord(win);
     } else {
+        // You did grow you noob. Resize back
         snake->body[snake->body_size-1] = NULL;
         snake->body_size--;
     }
 }
 
+
 int main() {
-    /* init the ncurses screen */
-    initscr();
+    WINDOW* win;
+    /*  Initialize ncurses  */
+    if ( (win = initscr()) == NULL ) {
+      fprintf(stderr, "Error initialising ncurses.\n");
+      exit(EXIT_FAILURE);
+    }
     start_color();
     noecho();
     /* disable cursor */
@@ -95,15 +134,16 @@ int main() {
     init_pair(1, COLOR_RED, COLOR_RED);
     /* apple color */
     init_pair(2, COLOR_GREEN, COLOR_GREEN);
+    /* border color */
+    init_pair(3, COLOR_BLUE, COLOR_BLUE);
     /* set random seed */
     srand(42);
     /* main loop */
-    time_t last;
-    last = time(0);
+    uint64_t last = GetTimeStamp();
 
     Snake snake;
     init_snake(&snake);
-    Coord apple = (Coord) {0,0};
+    Coord* apple = rand_coord(win);
     Coord direction = (Coord) {1, 0};
 
     bool running = TRUE;
@@ -125,10 +165,11 @@ int main() {
             }
         }
         /* step when every second */
-        if ( difftime(time(0), last) >= 1) {
-            last = time(0);
-            move_snake(&snake, &apple, &direction);
-            draw(&snake, &apple);
+        uint64_t newLast = GetTimeStamp();
+        if ( newLast - last >= 100000) {
+            last = newLast;
+            move_snake(win, &snake, apple, &direction);
+            draw(win, &snake, apple);
         }
     };
 
