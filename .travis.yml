@@ -1,5 +1,5 @@
 language: c
-install: sudo apt-get install libncurses-dev
+install: sudo apt-get install libncurses-dev libnet1-dev
 compiler:
 - clang
 - gcc
