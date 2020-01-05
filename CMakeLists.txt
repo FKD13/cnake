@@ -1,5 +1,17 @@
 cmake_minimum_required(VERSION 2.8.12)
 project(cnake)
 
-add_executable(cnake snake.c)
+# Client configuration
+add_executable(cnake src/client/snake.c)
+
 target_link_libraries(cnake ncurses)
+
+# Server configuration
+add_executable(server
+        src/server/main.cpp
+        src/server/connection/clientConnection.cpp
+        src/server/connection/clientGreeter.cpp
+        src/server/client.cpp)
+
+target_link_libraries(server boost_system)
+target_link_libraries(server pthread)
