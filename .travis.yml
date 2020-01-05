@@ -5,7 +5,9 @@ compiler:
 - gcc
 before_install:
 - pwd
-script: make build
+script: 
+- cmake .
+- make
 
 before_deploy:
   - export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
