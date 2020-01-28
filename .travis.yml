@@ -1,4 +1,4 @@
-language: c
+language: cpp
 install: sudo apt-get install libncurses-dev libnet1-dev libboost-all-dev
 compiler:
 - clang
