@@ -11,7 +11,10 @@ add_executable(server
         src/server/main.cpp
         src/server/connection/clientConnection.cpp
         src/server/connection/clientGreeter.cpp
-        src/server/client.cpp)
+        src/server/connection/connectionManager.cpp
+        )
 
 target_link_libraries(server boost_system)
+target_link_libraries(server boost_thread)
+target_link_libraries(server boost_chrono)
 target_link_libraries(server pthread)

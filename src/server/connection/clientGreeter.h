@@ -1,15 +1,15 @@
 #ifndef CNAKE_CLIENTGREETER_H
 #define CNAKE_CLIENTGREETER_H
 
-#include <boost/asio.hpp>
-#include <boost/bind.hpp>
+#include "connectionManager.h"
 
-class ClientGreeter {
+class ClientGreeter{
 private:
-    int port;
-    int socketDescriptor;
+    boost::asio::io_service *io_service;
+    boost::asio::ip::tcp::acceptor *acceptor;
+    ConnectionManager *manager;
 public:
-    explicit ClientGreeter(int port);
+    explicit ClientGreeter(ConnectionManager *manager, int port);
     ~ClientGreeter();
     void run();
 };

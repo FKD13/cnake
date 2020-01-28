@@ -5,5 +5,7 @@
 #include "connection/clientGreeter.h"
 
 int main() {
-    std::cout << "Server in Progress" << std::endl;
+    ConnectionManager c;
+    ClientGreeter g(&c, 8000);
+    g.run();
 }
