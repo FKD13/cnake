@@ -2,7 +2,6 @@
  * This class will handle new clients connecting, and create the according clientConnection.
  **/
 
-#include <iostream>
 #include "clientGreeter.h"
 
 ClientGreeter::ClientGreeter(ConnectionManager *manager, int port) : manager(manager){
@@ -16,10 +15,10 @@ ClientGreeter::ClientGreeter(ConnectionManager *manager, int port) : manager(man
 ClientGreeter::~ClientGreeter() {}
 
 void ClientGreeter::run() {
-    while (true) {
+    while (running) {
         auto *socket = new boost::asio::ip::tcp::socket(*io_service);
         acceptor->accept(*socket);
-        manager->addConnection(new ClientConnection(socket))->activate();
-        std::cout << "Client connected" << std::endl;
+        manager->addConnection(new ClientConnection(socket))->start_in_new_thread();
+        std::cout << "Client connected: " << socket->remote_endpoint().address().to_string() << std::endl;
     }
 }

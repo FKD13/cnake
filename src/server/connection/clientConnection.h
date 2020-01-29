@@ -6,17 +6,16 @@
 #include <boost/chrono.hpp>
 #include <iostream>
 #include "../../util/move.h"
+#include "../../util/Threadable.h"
 
-class ClientConnection {
+class ClientConnection : public Threadable {
 private:
     boost::asio::ip::tcp::socket *socket;
-    boost::thread *thread = nullptr;
     Direction last_dir;
+    void run() override;
 public:
-    ClientConnection(boost::asio::ip::tcp::socket *socket);
-    ~ClientConnection();
-    static void run(ClientConnection *c);
-    void activate();
+    explicit ClientConnection(boost::asio::ip::tcp::socket *socket);
+    ~ClientConnection() override;
 };
 
 #endif //CNAKE_CLIENTCONNECTION_H
