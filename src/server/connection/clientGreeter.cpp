@@ -3,6 +3,7 @@
  **/
 
 #include "clientGreeter.h"
+#include "../../util/logger.h"
 
 ClientGreeter::ClientGreeter(ConnectionManager *manager, int port) : manager(manager){
     io_service = new boost::asio::io_service();
@@ -19,6 +20,7 @@ void ClientGreeter::run() {
         auto *socket = new boost::asio::ip::tcp::socket(*io_service);
         acceptor->accept(*socket);
         manager->addConnection(new ClientConnection(socket))->start_in_new_thread();
-        std::cout << "Client connected: " << socket->remote_endpoint().address().to_string() << std::endl;
+        //Logger::info("yeet");
+        Logger::info("Client Connected from " + socket->remote_endpoint().address().to_string());
     }
 }

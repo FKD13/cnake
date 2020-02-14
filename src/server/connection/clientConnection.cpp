@@ -4,8 +4,11 @@
 
 #include <string>
 #include "clientConnection.h"
+#include "../../util/logger.h"
 
-ClientConnection::ClientConnection(boost::asio::ip::tcp::socket *socket) : socket(socket), last_dir(N), registered(false) {}
+ClientConnection::ClientConnection(boost::asio::ip::tcp::socket *socket) : socket(socket), last_dir(N), registered(false) {
+    ip = socket->remote_endpoint().address().to_string();
+}
 
 ClientConnection::~ClientConnection() {
     socket->close();
@@ -17,13 +20,8 @@ ClientConnection::~ClientConnection() {
 void ClientConnection::run() {
     reg();
     while (running) {
-        boost::asio::streambuf recv_buff;
-        boost::system::error_code err;
-        boost::asio::read_until(*socket, recv_buff, '\n', err);
-        if (err && err == boost::asio::error::eof) {
-            running = false;
-        } else {
-            Direction newDir = parseDir(std::string(boost::asio::buffer_cast<const char*>(recv_buff.data())));
+        Direction newDir = parseDir(read());
+        if (running) {
             if (newDir != WRONG) {
                 last_dir = newDir;
             } else {
@@ -35,20 +33,38 @@ void ClientConnection::run() {
 }
 
 void ClientConnection::reg() {
-    boost::asio::streambuf recv_buff;
-    boost::system::error_code err;
-
     boost::asio::write(*socket, boost::asio::buffer("IDENTIFY\n"));
-    boost::asio::read_until(*socket, recv_buff, '\n', err);
-    name = std::string(boost::asio::buffer_cast<const char*>(recv_buff.data()));
-    name.erase(std::remove(name.begin(), name.end(), '\n'), name.end());
-    if (name.empty()) {
-        reg();
+    name = read();
+    if (name.empty() || !running) {
+        Logger::info("Client (" + ip + ") Reqistration Failed");
+        running = false;
+    } else {
+        Logger::info("Client (" + ip + ") Registered");
+        registered = true;
     }
-    registered = true;
 }
 
-Direction ClientConnection::parseDir(const std::string s) {
+std::string ClientConnection::read() {
+    boost::asio::streambuf recv_buff;
+    boost::system::error_code err;
+    boost::asio::read_until(*socket, recv_buff, '\n', err);
+    if (err && err == boost::asio::error::eof) {
+        Logger::warn("Connection dropped (" + ip + "): " + err.message());
+        running = false;
+        return "";
+    }
+    else if (err) {
+        Logger::warn("Connection dropped (" + ip + "): " + err.message());
+        running = false;
+        return "";
+    } else {
+        std::string data = std::string(boost::asio::buffer_cast<const char *>(recv_buff.data()));
+        data.erase(std::remove(data.begin(), data.end(), '\n'), data.end());
+        return data;
+    }
+}
+
+Direction ClientConnection::parseDir(const std::string& s) {
     if (s == "N\n") return N;
     else if (s == "Z\n") return Z;
     else if (s == "W\n") return W;
