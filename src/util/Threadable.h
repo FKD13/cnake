@@ -7,7 +7,7 @@
 class Threadable {
 protected:
     boost::thread *thread = nullptr;
-    bool running;
+    bool running = true;
     virtual void run();
 public:
     Threadable() = default;

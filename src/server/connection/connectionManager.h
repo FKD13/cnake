@@ -6,11 +6,11 @@
 #include "clientConnection.h"
 
 class ConnectionManager {
-private:
-    std::vector<ClientConnection*> connections;
 public:
+    std::vector<ClientConnection*> connections;
     ~ConnectionManager();
     ClientConnection* addConnection(ClientConnection* c);
+    void removeConnection(ClientConnection *c);
 };
 
 
