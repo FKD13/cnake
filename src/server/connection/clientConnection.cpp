@@ -5,7 +5,7 @@
 #include <string>
 #include "clientConnection.h"
 
-ClientConnection::ClientConnection(boost::asio::ip::tcp::socket *socket) : socket(socket), last_dir(N) {}
+ClientConnection::ClientConnection(boost::asio::ip::tcp::socket *socket) : socket(socket), last_dir(N), registered(false) {}
 
 ClientConnection::~ClientConnection() {
     socket->close();
@@ -15,14 +15,15 @@ ClientConnection::~ClientConnection() {
 }
 
 void ClientConnection::run() {
+    reg();
     while (running) {
-        boost::asio::streambuf buf;
+        boost::asio::streambuf recv_buff;
         boost::system::error_code err;
-        boost::asio::read_until(*socket, buf, '\n', err);
+        boost::asio::read_until(*socket, recv_buff, '\n', err);
         if (err && err == boost::asio::error::eof) {
             running = false;
         } else {
-            Direction newDir = parseDir(boost::asio::buffer_cast<const std::string>(buf.data()));
+            Direction newDir = parseDir(std::string(boost::asio::buffer_cast<const char*>(recv_buff.data())));
             if (newDir != WRONG) {
                 last_dir = newDir;
             } else {
@@ -33,14 +34,27 @@ void ClientConnection::run() {
     }
 }
 
-Direction ClientConnection::parseDir(const std::string s) {
-    switch s {
-        case "N": return Z;
-        case "O": return N;
-        case "Z": return Z;
-        case "W": return W;
+void ClientConnection::reg() {
+    boost::asio::streambuf recv_buff;
+    boost::system::error_code err;
+
+    boost::asio::write(*socket, boost::asio::buffer("IDENTIFY"));
+    boost::asio::read_until(*socket, recv_buff, '\n', err);
+    name = std::string(boost::asio::buffer_cast<const char*>(recv_buff.data()));
+    name.erase(std::remove(name.begin(), name.end(), '\n'), name.end());
+    if (name.empty()) {
+        reg();
     }
-    return WRONG;
+    registered = true;
+}
+
+Direction ClientConnection::parseDir(const std::string s) {
+    std::cout << s << std::endl;
+    if (s == "N\n") return N;
+    else if (s == "Z\n") return Z;
+    else if (s == "W\n") return W;
+    else if (s == "O\n") return O;
+    else return WRONG;
 }
 
 Direction ClientConnection::getLastDir() const {

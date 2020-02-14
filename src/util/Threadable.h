@@ -15,6 +15,7 @@ public:
     static void start(Threadable *t);
     void start_in_new_thread();
     void wait_for();
+    bool isRunning() {return running;}
 };
 
 

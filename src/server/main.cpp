@@ -8,7 +8,9 @@ int main() {
     while(true) {
         boost::this_thread::sleep_for(boost::chrono::seconds{1});
         for (ClientConnection *cc : c.connections) {
-            std::cout << cc->getLastDir() << std::endl;
+            if (cc->isRunning() && cc->isRegisterd()) {
+                std::cout << cc->getName() << ": " << std::to_string(cc->getLastDir()) << std::endl;
+            }
         }
     }
     g.wait_for();
