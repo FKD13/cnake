@@ -38,7 +38,7 @@ void ClientConnection::reg() {
     boost::asio::streambuf recv_buff;
     boost::system::error_code err;
 
-    boost::asio::write(*socket, boost::asio::buffer("IDENTIFY"));
+    boost::asio::write(*socket, boost::asio::buffer("IDENTIFY\n"));
     boost::asio::read_until(*socket, recv_buff, '\n', err);
     name = std::string(boost::asio::buffer_cast<const char*>(recv_buff.data()));
     name.erase(std::remove(name.begin(), name.end(), '\n'), name.end());
@@ -49,7 +49,6 @@ void ClientConnection::reg() {
 }
 
 Direction ClientConnection::parseDir(const std::string s) {
-    std::cout << s << std::endl;
     if (s == "N\n") return N;
     else if (s == "Z\n") return Z;
     else if (s == "W\n") return W;
