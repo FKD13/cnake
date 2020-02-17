@@ -65,10 +65,10 @@ std::string ClientConnection::read() {
 }
 
 Direction ClientConnection::parseDir(const std::string& s) {
-    if (s == "N\n") return N;
-    else if (s == "Z\n") return Z;
-    else if (s == "W\n") return W;
-    else if (s == "O\n") return O;
+    if (s == "N") return N;
+    else if (s == "Z") return Z;
+    else if (s == "W") return W;
+    else if (s == "O") return O;
     else return WRONG;
 }
 

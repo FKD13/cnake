@@ -7,11 +7,13 @@
 #include <iostream>
 #include "../../util/move.h"
 #include "../../util/Threadable.h"
+#include "../snake.h"
 
 class ClientConnection : public Threadable {
 private:
     boost::asio::ip::tcp::socket *socket;
 
+    Snake snake;
     Direction last_dir;
     std::string name;
     std::string ip;
@@ -29,6 +31,7 @@ public:
     std::string& getName() {return name;}
     std::string& getIp() { return ip;}
     boost::asio::ip::tcp::socket* getSocket() { return socket;}
+    Snake& getSnake() { return snake;}
 };
 
 #endif //CNAKE_CLIENTCONNECTION_H
