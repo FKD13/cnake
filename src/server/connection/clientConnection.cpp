@@ -12,7 +12,6 @@ ClientConnection::ClientConnection(boost::asio::ip::tcp::socket *socket) : socke
 
 ClientConnection::~ClientConnection() {
     socket->close();
-    socket->release();
     delete socket;
     socket = nullptr;
 }
