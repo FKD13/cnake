@@ -14,7 +14,7 @@ add_executable(server
         src/server/connection/connectionManager.cpp
         src/util/Threadable.cpp
         src/util/logger.cpp
-        src/server/snake.cpp)
+        src/server/snake.cpp src/server/game.cpp src/server/game.h)
 
 target_link_libraries(server boost_system)
 target_link_libraries(server boost_thread)

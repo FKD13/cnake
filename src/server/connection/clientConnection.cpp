@@ -32,10 +32,10 @@ void ClientConnection::run() {
 }
 
 void ClientConnection::reg() {
-    boost::asio::write(*socket, boost::asio::buffer("IDENTIFY\n"));
+    write("IDENTIFY");
     name = read();
     if (name.empty() || !running) {
-        Logger::info("Client (" + ip + ") Reqistration Failed");
+        Logger::info("Client (" + ip + ") Registration Failed");
         running = false;
     } else {
         Logger::info("Client (" + ip + ") Registered");
@@ -61,6 +61,10 @@ std::string ClientConnection::read() {
         data.erase(std::remove(data.begin(), data.end(), '\n'), data.end());
         return data;
     }
+}
+
+void ClientConnection::write(const std::string& s) {
+    boost::asio::write(*socket, boost::asio::buffer(s + "\n"));
 }
 
 Direction ClientConnection::parseDir(const std::string& s) {

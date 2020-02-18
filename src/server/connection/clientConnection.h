@@ -27,6 +27,7 @@ public:
     ~ClientConnection() override;
     Direction getLastDir() const;
     std::string read();
+    void write(const std::string&);
     bool isRegisterd() {return registered;}
     std::string& getName() {return name;}
     std::string& getIp() { return ip;}
