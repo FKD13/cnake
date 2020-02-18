@@ -29,7 +29,6 @@
 
 use std::io::prelude::*;
 use std::net::TcpStream;
-use std::time::Duration;
 use std::io;
 
 fn main() -> std::io::Result<()> {
@@ -39,12 +38,11 @@ fn main() -> std::io::Result<()> {
         .expect("Failed to read line");
 
     let mut stream = TcpStream::connect("10.1.0.110:8000")?;
-    stream.set_read_timeout(Some(Duration::new(2, 0)))?;
-    println!("{:?}", stream.read_timeout());
 
     read_print(&mut stream)?;
     stream.write(name.as_bytes())?;
     stream.flush()?;
+    
     loop {
         read_print(&mut stream)?;
     }
