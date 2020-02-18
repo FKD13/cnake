@@ -1,7 +1,6 @@
 #ifndef CNAKE_GAME_H
 #define CNAKE_GAME_H
 
-
 #include <utility>
 #include "connection/clientConnection.h"
 #include "connection/connectionManager.h"
