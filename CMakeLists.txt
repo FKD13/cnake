@@ -2,9 +2,9 @@ cmake_minimum_required(VERSION 2.8.12)
 project(cnake)
 
 # Client configuration
-add_executable(cnake src/client/snake.c)
+add_executable(cnake src/client/snake.c src/client/display.c src/client/display.h)
 
-target_link_libraries(cnake ncurses)
+target_link_libraries(cnake caca)
 
 # Server configuration
 add_executable(server
