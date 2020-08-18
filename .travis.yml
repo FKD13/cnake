@@ -1,6 +1,6 @@
 dist: bionic
 language: cpp
-install: sudo apt-get install libcaca-dev libnet1-dev libboost-all-dev
+install: sudo apt-get install libcaca-dev libnet1-dev
 compiler:
 - clang
 - gcc
