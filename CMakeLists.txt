@@ -7,16 +7,6 @@ add_executable(cnake src/client/snake.c src/client/display.c src/client/display.
 target_link_libraries(cnake caca)
 
 # Server configuration
-add_executable(server
-        src/server/main.cpp
-        src/server/connection/clientConnection.cpp
-        src/server/connection/clientGreeter.cpp
-        src/server/connection/connectionManager.cpp
-        src/util/Threadable.cpp
-        src/util/logger.cpp
-        src/server/snake.cpp src/server/game.cpp src/server/game.h)
+add_executable(server src/server/socket.c src/server/main.c src/server/socket.h src/server/client.c src/server/client.h)
 
-target_link_libraries(server boost_system)
-target_link_libraries(server boost_thread)
-target_link_libraries(server boost_chrono)
 target_link_libraries(server pthread)

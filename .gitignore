@@ -10,5 +10,5 @@ Makefile
 cnake.cbp
 
 # binairies #
-cnake
-server
+/cnake
+/server
