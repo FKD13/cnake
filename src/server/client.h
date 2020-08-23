@@ -6,6 +6,7 @@
 typedef struct client {
     pthread_t input_thread;
     int sock;
+    int id;
 } client_t;
 
 #endif //CNAKE_CLIENT_H

@@ -1,3 +1,6 @@
+#include <time.h>
+#include <stdlib.h>
+
 #include "socket.h"
 
 int main() {
@@ -6,6 +9,8 @@ int main() {
     server.config.sin_family = AF_INET;
     server.config.sin_addr.s_addr = INADDR_ANY;
     server.config.sin_port = htons(8888);
+
+    srand(time(NULL));
 
     server_start(&server);
 }

@@ -29,11 +29,13 @@ int server_start(server_t* server) {
 }
 
 _Noreturn void server_accept(server_t* server) {
+    /* TODO: replace with proper id's */
     while (1) {
         int _sc_len = sizeof(server->config);
         client_t *client = malloc(sizeof(client_t));
         /* socklen_t -> unsigned int */
         client->sock = accept(server->sock, (struct sockaddr *) &(server->config), (socklen_t *) &_sc_len);
+        client->id = rand();
         if (pthread_create(&(client->input_thread), NULL, NULL /*TODO function*/, (void *) &client));
     }
 }
