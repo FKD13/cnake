@@ -43,6 +43,9 @@ void free_segment_t(segment_t** segment) {
 }
 
 void add_item(list_t* list, void* item) {
+  if(list == NULL) {
+    return;
+  }
   /* Check item is not already in list */
   segment_t* segment = list->first;
   while(segment != NULL) {
@@ -66,6 +69,9 @@ void add_item(list_t* list, void* item) {
 }
 
 void remove_item(list_t* list, void* item) {
+  if(list == NULL) {
+    return;
+  }
   segment_t* segment = list->first;
   while (segment != NULL && segment->content != item) {
     segment = segment->next;
