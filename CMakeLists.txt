@@ -7,6 +7,15 @@ add_executable(cnake src/client/snake.c src/client/display.c src/client/display.
 target_link_libraries(cnake caca)
 
 # Server configuration
-add_executable(server src/server/socket.c src/server/main.c src/server/socket.h src/server/client.c src/server/client.h src/server/game.h src/server/game.c)
+add_executable(server 
+  src/server/socket.c 
+  src/server/main.c 
+  src/server/socket.h 
+  src/server/client.c 
+  src/server/client.h 
+  src/server/game.h 
+  src/server/game.c
+  src/util/list.h
+  src/util/list.c)
 
 target_link_libraries(server pthread)
