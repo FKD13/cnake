@@ -9,4 +9,6 @@ typedef struct client {
     int id;
 } client_t;
 
+void * handle_connection(void* arg);
+
 #endif //CNAKE_CLIENT_H

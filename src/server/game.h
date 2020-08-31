@@ -8,6 +8,7 @@
 
 typedef struct game {
   list_t* clients;
+  uint8_t running;
 } game_t;
 
 game_t* init_game_t();

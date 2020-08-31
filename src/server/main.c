@@ -1,7 +1,9 @@
 #include <time.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "socket.h"
+#include "game.h"
 
 int main() {
     server_t server;
@@ -10,7 +12,13 @@ int main() {
     server.config.sin_addr.s_addr = INADDR_ANY;
     server.config.sin_port = htons(8888);
 
-    srand(time(NULL));
+    game_t* game = init_game_t();
+    game->running=1;
 
-    server_start(&server);
+    srand(time(NULL));
+    
+    printf("Starting Socket Server...\n");
+    server_start(&server, game);
+
+    free_game_t(&game);
 }

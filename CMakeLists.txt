@@ -1,8 +1,14 @@
 cmake_minimum_required(VERSION 2.8.12)
 project(cnake)
 
+set(CMAKE_CXX_FLAGS "-O3 -Wall -Wextra")
+
 # Client configuration
-add_executable(cnake src/client/snake.c src/client/display.c src/client/display.h)
+add_executable(cnake
+  src/client/snake.c
+  src/client/display.c
+  src/client/display.h
+)
 
 target_link_libraries(cnake caca)
 
@@ -16,6 +22,7 @@ add_executable(server
   src/server/game.h 
   src/server/game.c
   src/util/list.h
-  src/util/list.c)
+  src/util/list.c
+)
 
 target_link_libraries(server pthread)
