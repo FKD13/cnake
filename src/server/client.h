@@ -10,5 +10,5 @@ typedef struct client {
 } client_t;
 
 void * handle_connection(void* arg);
-
+void get(char** buf, int size, client_t* client);
 #endif //CNAKE_CLIENT_H

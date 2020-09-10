@@ -20,11 +20,29 @@ void* handle_connection(void* arg) {
 
   while(game->running) {
     char buf[12] = {0};
-    if(recv(client->sock, buf, 12, 0) > 0) {
-      printf("[%d] %s", client->id, buf);
-    } else {
-      pthread_exit(NULL);
-    }
+    get(&buf, 12, client);
+    printf("%s", buf);
   }
   pthread_exit(NULL);
+}
+
+void get(char** buf, int size, client_t* client) {
+  int i;
+  int done = 0;
+  char buff[12] = {0};
+  while (done < size) {
+    i = recv(client->sock, buf+done, size - done, 0);
+    printf("i: %d, done: %d\n", i, done);
+    if (i <= 0) {
+      /* 0 bytes returned, this means the client left */
+      printf("[%d] Client Disconnected\n", client->id);
+      pthread_exit(NULL);
+    }
+    done += i;
+  }
+  printf("%s\n", *buf);
+}
+
+void disconnect() {
+    printf("disconnecting client");
 }
